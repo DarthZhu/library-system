@@ -2,11 +2,11 @@ from django.db import models
 
 
 class Book(models.Model):
-    ISBN = models.IntegerField()
+    ISBN = models.CharField(max_length=16)
     bookname = models.CharField(max_length=16)
     author = models.CharField(max_length=16, null=True)
     publisher = models.CharField(max_length=16, null=True)
-    price = models.IntegerField(null=False, default=0)
+    price = models.FloatField(null=False, default=0)
     amount = models.IntegerField(null=False, default=0)
     amount_left = models.IntegerField(null=False, default=0)
 
@@ -34,7 +34,7 @@ class User(models.Model):
 class AdminBill(models.Model):
     adminID = models.ForeignKey('Administrator', on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now=True)
-    outcome = models.IntegerField()
+    outcome = models.FloatField()
     is_pay = models.BooleanField(default=False)
     is_sent = models.BooleanField(default=False)
     is_cancelled = models.BooleanField(default=False)
@@ -43,7 +43,7 @@ class AdminBill(models.Model):
 class UserBill(models.Model):
     userID = models.ForeignKey('User', on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now=True)
-    income = models.IntegerField()
+    income = models.FloatField()
     is_pay = models.BooleanField(default=False)
     is_sent = models.BooleanField(default=False)
     is_cancelled = models.BooleanField(default=False)
