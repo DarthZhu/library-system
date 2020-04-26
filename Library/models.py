@@ -3,12 +3,11 @@ from django.db import models
 
 class Book(models.Model):
     ISBN = models.CharField(max_length=16)
-    bookname = models.CharField(max_length=16)
+    bookname = models.CharField(max_length=32)
     author = models.CharField(max_length=16, null=True)
-    publisher = models.CharField(max_length=16, null=True)
+    publisher = models.CharField(max_length=32, null=True)
     price = models.FloatField(null=False, default=0)
     amount = models.IntegerField(null=False, default=0)
-    amount_left = models.IntegerField(null=False, default=0)
 
 
 class Administrator(models.Model):
@@ -34,7 +33,9 @@ class User(models.Model):
 class AdminBill(models.Model):
     adminID = models.ForeignKey('Administrator', on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now=True)
-    outcome = models.FloatField()
+    price = models.IntegerField(default=0)
+    amount = models.IntegerField(default=0)
+    book = models.ForeignKey('Book', on_delete=models.CASCADE)
     is_pay = models.BooleanField(default=False)
     is_sent = models.BooleanField(default=False)
     is_cancelled = models.BooleanField(default=False)
@@ -43,7 +44,9 @@ class AdminBill(models.Model):
 class UserBill(models.Model):
     userID = models.ForeignKey('User', on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now=True)
-    income = models.FloatField()
+    pay = models.FloatField(default=0)
+    amount = models.IntegerField(default=0)
+    book = models.ForeignKey('Book', on_delete=models.CASCADE)
     is_pay = models.BooleanField(default=False)
     is_sent = models.BooleanField(default=False)
     is_cancelled = models.BooleanField(default=False)

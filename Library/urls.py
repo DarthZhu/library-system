@@ -9,6 +9,6 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('admin/<int:id>/index', views.admin_index, name='admin_index'),
     path('user/index', views.user_index, name='user_index'),
-    path('admin/<int:id>/booklist', views.admin_booklist, name='admin_booklist'),
     path('admin/<int:id>/search', views.admin_search, name='admin_search'),
+    path('admin/<int:id>/add', views.admin_add, name='admin_add'),
 ]

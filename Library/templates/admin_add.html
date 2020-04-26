@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Search</title>
+    <title>Add to repository</title>
 </head>
 <body>
-<form action="{% url 'library:admin_search' id=id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+<form action="{% url 'library:admin_add' id=id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
     <div class="form-group">
         <label for="book_name">Book name</label>
         <input type="text" name="book_name" class="form-control" id="book_name">
@@ -17,16 +17,24 @@
     <div class="form-group">
         <label for="author">Author</label>
         <input type="text" name="author" class="form-control" id="author">
+    </div>
     <div class="form-group">
         <label for="publisher">Publisher</label>
         <input type="text" name="publisher" class="form-control" id="publisher">
     </div>
-    <button type="submit">Search!</button>
+    <div class="form-group">
+        <label for="price_sold">Price Sold</label>
+        <input type="text" name="price_sold" class="form-control" id="price_sold">
+    </div>
+    <div class="form-group">
+        <label for="price_bought">Price Bought</label>
+        <input type="text" name="price_bought" class="form-control" id="price_bought">
+    </div>
+    <div class="form-group">
+        <label for="amount">Amount</label>
+        <input type="text" name="amount" class="form-control" id="amount">
+    </div>
+    <button type="submit">Add</button>
 </form>
-<ul>
-    {% for book in books %}
-        <li>Book: {{ book.bookname }}</li>
-    {% endfor %}
-</ul>
 </body>
 </html>
