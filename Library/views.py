@@ -134,8 +134,9 @@ def admin_add(request, id):
         amount = int(amount)
         book = Book.objects.filter(bookname=book_name).filter(ISBN=isbn)
         book = book.filter(author=author).filter(publisher=publisher)
-        print(book.count())
+        # print(book.count())
         if book.count() == 0:
+            # print('Not exist')
             book = Book()
             book.bookname = book_name
             book.ISBN = isbn
@@ -156,3 +157,44 @@ def admin_add(request, id):
         bill.book = book
         # bill.save()
         return HttpResponse('Purchase Success')
+
+
+def admin_edit(request, id):
+    if request.method == "GET":
+        data = {
+            "title": "Register",
+            "id": id,
+        }
+        return render(request, 'admin_edit.html', context=data)
+    else:
+        b_id = request.POST.get('book_id')
+        book = Book.objects.filter(id=b_id)
+        if book.count() == 0:
+            return HttpResponse('Book not exist')
+        else:
+            book = list(book)
+            book = book[0]
+            book_name = request.POST.get('book_name')
+            isbn = request.POST.get('isbn')
+            author = request.POST.get('author')
+            publisher = request.POST.get('publisher')
+            price_sold = request.POST.get('price_sold')
+            amount = request.POST.get('amount')
+            if book_name != "":
+                book.bookname = book_name
+            if isbn != "":
+                book.ISBN = isbn
+            if author != "":
+                book.author = author
+            if publisher != "":
+                book.publisher = publisher
+            if price_sold != "":
+                price_sold = int(price_sold)
+                book.price = price_sold
+            if amount != "":
+                amount = int(amount)
+                book.amount = amount
+            # book.save()
+            print(book.author)
+            return HttpResponse('Edit Succeed')
+

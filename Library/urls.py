@@ -11,4 +11,5 @@ urlpatterns = [
     path('user/index', views.user_index, name='user_index'),
     path('admin/<int:id>/search', views.admin_search, name='admin_search'),
     path('admin/<int:id>/add', views.admin_add, name='admin_add'),
+    path('admin/<int:id>/edit', views.admin_edit, name='admin_edit'),
 ]
