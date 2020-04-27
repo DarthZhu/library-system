@@ -19,4 +19,6 @@ urlpatterns = [
     path('user/<int:id>/search', views.user_search, name='user_search'),
     path('user/<int:id>/bills', views.user_bill, name='user_bill'),
     path('user/<int:id>/buy', views.user_buy, name='user_buy'),
+    path('user/<int:id>/pay', views.user_pay, name='user_pay'),
+    path('user/<int:id>/confirm', views.user_confirm, name='user_confirm'),
 ]

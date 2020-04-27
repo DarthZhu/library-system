@@ -387,3 +387,54 @@ def user_buy(request, id):
                     # bill.save()
                     # book.save()
                     return HttpResponse('Purchase Success')
+
+
+def user_pay(request, id):
+    bills = UserBill.objects.filter(userID=id).filter(is_cancelled=False).filter(is_pay=False)
+    if bills.count() == 0:
+        return HttpResponse('No bill needs to be paid')
+    if request.method == "GET":
+        data = {
+            "title": "Pay",
+            "id": id,
+            "bills": bills,
+        }
+        return render(request, 'user_pay.html', context=data)
+    else:
+        bill_id = request.POST.get('bill_id')
+        bill_id = int(bill_id)
+        bill = bills.filter(id=bill_id)
+        if bill.count() == 0:
+            return HttpResponse('Bill is invalid, cancelled or already paid')
+        else:
+            bill = list(bill)
+            bill = bill[0]
+            bill.is_pay = True
+            # bill.save()
+            return HttpResponse('Bill is paid')
+
+
+def user_confirm(request, id):
+    bills = UserBill.objects.filter(userID=id).filter(is_cancelled=False).filter(is_pay=True).filter(is_sent=False)
+    if bills.count() == 0:
+        return HttpResponse('No order needs to be confirmed')
+    if request.method == "GET":
+        data = {
+            "title": "Pay",
+            "id": id,
+            "bills": bills,
+        }
+        return render(request, 'admin_confirm.html', context=data)
+    else:
+        bill_id = request.POST.get('bill_id')
+        bill_id = int(bill_id)
+        bill = bills.filter(id=bill_id)
+        if bill.count() == 0:
+            return HttpResponse('Bill is invalid, cancelled or is not paid')
+        else:
+            bill = list(bill)
+            bill = bill[0]
+            bill.is_sent = True
+            # bill.save()
+            return HttpResponse('Order is received')
+
