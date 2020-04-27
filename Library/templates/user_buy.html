@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Buy</title>
+</head>
+<body>
+<form action="{% url 'library:user_buy' id=id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="form-group">
+        <label for="book_name">Book name</label>
+        <input type="text" name="book_name" class="form-control" id="book_name">
+    </div>
+    <div class="form-group">
+        <label for="isbn">ISBN</label>
+        <input type="text" name="isbn" class="form-control" id="isbn">
+    </div>
+    <div class="form-group">
+        <label for="author">Author</label>
+        <input type="text" name="author" class="form-control" id="author">
+    </div>
+    <div class="form-group">
+        <label for="publisher">Publisher</label>
+        <input type="text" name="publisher" class="form-control" id="publisher">
+    </div>
+    <div class="form-group">
+        <label for="amount">Amount</label>
+        <input type="text" name="amount" class="form-control" id="amount">
+    </div>
+    <button type="submit">Buy</button>
+</form>
+<ul>
+    {% for book in books %}
+        <li>Book: {{ book.bookname }}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

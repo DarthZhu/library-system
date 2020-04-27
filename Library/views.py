@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from Library.models import User, Administrator, Book, AdminBill
+from Library.models import User, Administrator, Book, AdminBill, UserBill
 
 
 def index(request):
@@ -71,10 +71,6 @@ def login(request):
                 return redirect(reverse('library:admin_index', kwargs={'id': administrator.id}))
             else:
                 return HttpResponse('Invalid password or username')
-
-
-def user_index(request, id):
-    return HttpResponse('Welcome User!')
 
 
 def admin_index(request, id):
@@ -289,3 +285,105 @@ def admin_cancel(request, id):
             bill.is_cancelled = True
             # bill.save()
             return HttpResponse('Order has been cancelled')
+
+
+def user_index(request, id):
+    data = {
+        "id": id,
+    }
+    return render(request, 'user_index.html', context=data)
+
+
+def user_search(request, id):
+    books = Book.objects.all()
+    if request.method == "GET":
+        data = {
+            "title": "search",
+            "id": id,
+            "books": books,
+        }
+        return render(request, 'user_search.html', context=data)
+    else:
+        book_name = request.POST.get('book_name')
+        isbn = request.POST.get('isbn')
+        author = request.POST.get('author')
+        publisher = request.POST.get('publisher')
+        result = Book.objects.all()
+        if book_name:
+            result = result.filter(bookname=book_name)
+        if isbn:
+            result = result.filter(ISBN=isbn)
+        if author:
+            result = result.filter(author=author)
+        if publisher:
+            result = result.filter(publisher=publisher)
+        data = {
+            "books": result,
+            "id": id,
+        }
+        return render(request, 'user_search.html', context=data)
+
+
+def user_bill(request, id):
+    bills = UserBill.objects.filter(userID=id)
+    data = {
+        "title": "Register",
+        "id": id,
+        "bills": bills,
+    }
+    return render(request, 'admin_bill.html', context=data)
+
+
+def user_buy(request, id):
+    books = Book.objects.all()
+    if request.method == "GET":
+        data = {
+            "title": "Add",
+            "id": id,
+            "books": books,
+        }
+        return render(request, 'user_buy.html', context=data)
+    else:
+        book_name = request.POST.get('book_name')
+        isbn = request.POST.get('isbn')
+        author = request.POST.get('author')
+        publisher = request.POST.get('publisher')
+        amount = request.POST.get('amount')
+        if book_name:
+            book = books.filter(bookname=book_name)
+        if isbn:
+            book = book.filter(ISBN=isbn)
+        if author:
+            book = book.filter(author=author)
+        if publisher:
+            book = book.filter(publisher=publisher)
+        if amount == "":
+            return HttpResponse('Please input the amount you want to buy')
+        amount = int(amount)
+        if book.count() == 0:
+            return HttpResponse('Book not exist')
+        elif book.count() > 1:
+            return HttpResponse('Too few descriptions')
+        else:
+            book = list(book)
+            book = book[0]
+            if book.amount == 0:
+                return HttpResponse('Out of Stock')
+            else:
+                if amount > book.amount:
+                    return HttpResponse('Not enough book')
+                else:
+                    bill = UserBill()
+                    user = User.objects.filter(id=id)
+                    user = list(user)
+                    user = user[0]
+                    bill.userID = user
+                    bill.amount = amount
+                    bill.book = book
+                    bill.pay = amount * book.price
+                    book.amount -= amount
+                    # print(bill.pay)
+                    # print(book.amount)
+                    # bill.save()
+                    # book.save()
+                    return HttpResponse('Purchase Success')

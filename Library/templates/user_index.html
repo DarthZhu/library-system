@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Index</title>
+</head>
+<body>
+<h1>Welcome User{{ id }}</h1>
+<a href="{% url 'library:user_search' id=id %}">Book List</a>
+<br>
+<a href="{% url 'library:user_bill' id=id %}">Bills</a>
+<br>
+<a href="{% url 'library:user_buy' id=id %}">Buy</a>
+</body>
+</html>
