@@ -8,9 +8,15 @@
 <h1>Welcome Admin{{ id }}</h1>
 <a href="{% url 'library:admin_search' id=id %}">Book List</a>
 <br>
+<a href="{% url 'library:admin_bill' id=id %}">Bills</a>
+<br>
 <a href="{% url 'library:admin_add' id=id %}">Order</a>
 <br>
 <a href="{% url 'library:admin_pay' id=id %}">Pay</a>
+<br>
+<a href="{% url 'library:admin_confirm' id=id %}">Confirm</a>
+<br>
+<a href="{% url 'library:admin_cancel' id=id %}">Cancel</a>
 
 </body>
 </html>

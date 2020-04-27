@@ -15,4 +15,5 @@ urlpatterns = [
     path('admin/<int:id>/bills', views.admin_bill, name='admin_bill'),
     path('admin/<int:id>/pay', views.admin_pay, name='admin_pay'),
     path('admin/<int:id>/confirm', views.admin_confirm, name='admin_confirm'),
+    path('admin/<int:id>/cancel', views.admin_cancel, name='admin_cancel'),
 ]

@@ -34,7 +34,7 @@ def register(request):
         user.user_age = age
         user.user_phone = phone
         # user.save()
-        print(gender)
+        # print(gender)
         return redirect(reverse("library:login"))
 
 
@@ -195,7 +195,7 @@ def admin_edit(request, id):
                 amount = int(amount)
                 book.amount = amount
             # book.save()
-            print(book.author)
+            # print(book.author)
             return HttpResponse('Edit Succeed')
 
 
@@ -211,6 +211,8 @@ def admin_bill(request, id):
 
 def admin_pay(request, id):
     bills = AdminBill.objects.filter(adminID=id).filter(is_cancelled=False).filter(is_pay=False)
+    if bills.count() == 0:
+        return HttpResponse('No bill needs to be paid')
     if request.method == "GET":
         data = {
             "title": "Pay",
@@ -221,19 +223,21 @@ def admin_pay(request, id):
     else:
         bill_id = request.POST.get('bill_id')
         bill_id = int(bill_id)
-        bill = AdminBill.objects.filter(id=bill_id)
+        bill = bills.filter(id=bill_id)
         if bill.count() == 0:
             return HttpResponse('Bill is invalid, cancelled or already paid')
         else:
             bill = list(bill)
             bill = bill[0]
             bill.is_pay = True
-            bill.save()
+            # bill.save()
             return HttpResponse('Bill is paid')
 
 
 def admin_confirm(request, id):
     bills = AdminBill.objects.filter(adminID=id).filter(is_cancelled=False).filter(is_pay=True).filter(is_sent=False)
+    if bills.count() == 0:
+        return HttpResponse('No order needs to be confirmed')
     if request.method == "GET":
         data = {
             "title": "Pay",
@@ -244,7 +248,7 @@ def admin_confirm(request, id):
     else:
         bill_id = request.POST.get('bill_id')
         bill_id = int(bill_id)
-        bill = AdminBill.objects.filter(id=bill_id)
+        bill = bills.filter(id=bill_id)
         if bill.count() == 0:
             return HttpResponse('Bill is invalid, cancelled or is not paid')
         else:
@@ -252,10 +256,36 @@ def admin_confirm(request, id):
             bill = bill[0]
             bill.is_sent = True
             book = bill.book
-            print(book.amount)
+            # print(book.amount)
             book.amount += bill.amount
-            print(book.amount)
+            # print(book.amount)
             # book.save()
             # bill.save()
-            return HttpResponse('Bill is received')
+            return HttpResponse('Order is received')
 
+
+def admin_cancel(request, id):
+    bills = AdminBill.objects.filter(adminID=id).filter(is_cancelled=False).filter(is_pay=False)
+    if bills.count() == 0:
+        return HttpResponse('No bill can be cancelled')
+    if request.method == "GET":
+        data = {
+            "title": "Pay",
+            "id": id,
+            "bills": bills,
+        }
+        return render(request, 'admin_cancel.html', context=data)
+    else:
+        bill_id = request.POST.get('bill_id')
+        bill_id = int(bill_id)
+        bill = bills.filter(id=bill_id)
+        if bill.count() == 0:
+            return HttpResponse('Bill is invalid, cancelled ,is paid or is received')
+        else:
+            bill = list(bill)
+            bill = bill[0]
+            bill.is_pay = False
+            bill.is_sent = False
+            bill.is_cancelled = True
+            # bill.save()
+            return HttpResponse('Order has been cancelled')
