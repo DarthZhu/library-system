@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Pay</title>
+</head>
+<body>
+<form action="{% url 'library:admin_pay' id=id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="form-group">
+        <label for="bill_id">Bill ID</label>
+        <input type="text" name="bill_id" class="form-control" id="bill_id">
+    </div>
+
+    <button type="submit">Pay</button>
+</form>
+<ul>
+    {% for bill in bills %}
+        <li>Bill ID:{{ bill.id }}</li>
+    {% endfor %}
+
+</ul>
+</body>
+</html>

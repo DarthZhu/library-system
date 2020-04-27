@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Bill</title>
+</head>
+<body>
+<ul>
+    {% for bill in bills %}
+        <li>Bill ID:{{ bill.id }}</li>
+    {% endfor %}
+
+</ul>
+</body>
+</html>

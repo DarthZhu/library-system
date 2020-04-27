@@ -117,7 +117,7 @@ def admin_search(request, id):
 def admin_add(request, id):
     if request.method == "GET":
         data = {
-            "title": "Register",
+            "title": "Add",
             "id": id,
         }
         return render(request, 'admin_add.html', context=data)
@@ -162,7 +162,7 @@ def admin_add(request, id):
 def admin_edit(request, id):
     if request.method == "GET":
         data = {
-            "title": "Register",
+            "title": "Edit",
             "id": id,
         }
         return render(request, 'admin_edit.html', context=data)
@@ -197,4 +197,65 @@ def admin_edit(request, id):
             # book.save()
             print(book.author)
             return HttpResponse('Edit Succeed')
+
+
+def admin_bill(request, id):
+    bills = AdminBill.objects.filter(adminID=id)
+    data = {
+        "title": "Register",
+        "id": id,
+        "bills": bills,
+    }
+    return render(request, 'admin_bill.html', context=data)
+
+
+def admin_pay(request, id):
+    bills = AdminBill.objects.filter(adminID=id).filter(is_cancelled=False).filter(is_pay=False)
+    if request.method == "GET":
+        data = {
+            "title": "Pay",
+            "id": id,
+            "bills": bills,
+        }
+        return render(request, 'admin_pay.html', context=data)
+    else:
+        bill_id = request.POST.get('bill_id')
+        bill_id = int(bill_id)
+        bill = AdminBill.objects.filter(id=bill_id)
+        if bill.count() == 0:
+            return HttpResponse('Bill is invalid, cancelled or already paid')
+        else:
+            bill = list(bill)
+            bill = bill[0]
+            bill.is_pay = True
+            bill.save()
+            return HttpResponse('Bill is paid')
+
+
+def admin_confirm(request, id):
+    bills = AdminBill.objects.filter(adminID=id).filter(is_cancelled=False).filter(is_pay=True).filter(is_sent=False)
+    if request.method == "GET":
+        data = {
+            "title": "Pay",
+            "id": id,
+            "bills": bills,
+        }
+        return render(request, 'admin_confirm.html', context=data)
+    else:
+        bill_id = request.POST.get('bill_id')
+        bill_id = int(bill_id)
+        bill = AdminBill.objects.filter(id=bill_id)
+        if bill.count() == 0:
+            return HttpResponse('Bill is invalid, cancelled or is not paid')
+        else:
+            bill = list(bill)
+            bill = bill[0]
+            bill.is_sent = True
+            book = bill.book
+            print(book.amount)
+            book.amount += bill.amount
+            print(book.amount)
+            # book.save()
+            # bill.save()
+            return HttpResponse('Bill is received')
 

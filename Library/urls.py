@@ -12,4 +12,7 @@ urlpatterns = [
     path('admin/<int:id>/search', views.admin_search, name='admin_search'),
     path('admin/<int:id>/add', views.admin_add, name='admin_add'),
     path('admin/<int:id>/edit', views.admin_edit, name='admin_edit'),
+    path('admin/<int:id>/bills', views.admin_bill, name='admin_bill'),
+    path('admin/<int:id>/pay', views.admin_pay, name='admin_pay'),
+    path('admin/<int:id>/confirm', views.admin_confirm, name='admin_confirm'),
 ]
