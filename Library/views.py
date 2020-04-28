@@ -438,3 +438,33 @@ def user_confirm(request, id):
             # bill.save()
             return HttpResponse('Order is received')
 
+
+def user_cancel(request, id):
+    bills = UserBill.objects.filter(userID=id).filter(is_cancelled=False).filter(is_pay=False)
+    if bills.count() == 0:
+        return HttpResponse('No bill can be cancelled')
+    if request.method == "GET":
+        data = {
+            "title": "Pay",
+            "id": id,
+            "bills": bills,
+        }
+        return render(request, 'user_cancel.html', context=data)
+    else:
+        bill_id = request.POST.get('bill_id')
+        bill_id = int(bill_id)
+        bill = bills.filter(id=bill_id)
+        if bill.count() == 0:
+            return HttpResponse('Bill is invalid, cancelled ,is paid or is received')
+        else:
+            bill = list(bill)
+            bill = bill[0]
+            bill.is_pay = False
+            bill.is_sent = False
+            bill.is_cancelled = True
+            book = bill.book
+            book.amount += bill.amount
+            print (book.amount)
+            # book.save()
+            # bill.save()
+            return HttpResponse('Order has been cancelled')

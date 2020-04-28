@@ -21,4 +21,5 @@ urlpatterns = [
     path('user/<int:id>/buy', views.user_buy, name='user_buy'),
     path('user/<int:id>/pay', views.user_pay, name='user_pay'),
     path('user/<int:id>/confirm', views.user_confirm, name='user_confirm'),
+    path('user/<int:id>/cancel', views.user_cancel, name='user_cancel'),
 ]
