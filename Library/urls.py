@@ -15,6 +15,7 @@ urlpatterns = [
     path('admin/<int:id>/pay', views.admin_pay, name='admin_pay'),
     path('admin/<int:id>/confirm', views.admin_confirm, name='admin_confirm'),
     path('admin/<int:id>/cancel', views.admin_cancel, name='admin_cancel'),
+    path('admin/<int:id>/check', views.admin_check, name='admin_check'),
     path('user/<int:id>/index', views.user_index, name='user_index'),
     path('user/<int:id>/search', views.user_search, name='user_search'),
     path('user/<int:id>/bills', views.user_bill, name='user_bill'),
@@ -22,4 +23,5 @@ urlpatterns = [
     path('user/<int:id>/pay', views.user_pay, name='user_pay'),
     path('user/<int:id>/confirm', views.user_confirm, name='user_confirm'),
     path('user/<int:id>/cancel', views.user_cancel, name='user_cancel'),
+    path('user/<int:id>/edit', views.user_edit, name='user_edit'),
 ]

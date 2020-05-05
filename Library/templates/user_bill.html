@@ -7,7 +7,17 @@
 <body>
 <ul>
     {% for bill in bills %}
-        <li>Bill ID:{{ bill.id }}</li>
+        <li><strong>Bill ID</strong>:{{ bill.id }}
+        	<strong>User ID</strong>: {{ bill.userID.user_name }}&nbsp&nbsp&nbsp&nbsp
+            <strong>Bookname</strong>: {{ bill.book.bookname }}<br/>
+            <strong>Amount</strong>: {{ bill.amount }}<br/>
+            <strong>Time</strong>: {{ bill.time }}<br/>
+            <strong>Price</strong>: {{ bill.pay }}$<br/>
+            <strong>Is pay</strong>: {{ bill.is_pay }}<br/>
+            <strong>Is sent</strong>: {{ bill.is_sent }}<br/>
+            <strong>Is cancelled</strong>: {{ bill.is_cancelled }}<br/><br/>
+
+        </li>
     {% endfor %}
 </ul>
 </body>

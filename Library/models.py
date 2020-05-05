@@ -22,7 +22,7 @@ class Administrator(models.Model):
 
 class User(models.Model):
     user_username = models.CharField(max_length=16)
-    user_password = models.CharField(max_length=16)
+    user_password = models.CharField(max_length=100)
     user_name = models.CharField(max_length=16)
     user_gender = models.BooleanField(default=True)  # True = Male, False = Female
     user_age = models.IntegerField()
@@ -35,6 +35,7 @@ class AdminBill(models.Model):
     time = models.DateTimeField(auto_now=True)
     price = models.IntegerField(default=0)
     amount = models.IntegerField(default=0)
+    pay = models.IntegerField(default=0)
     book = models.ForeignKey('Book', on_delete=models.CASCADE)
     is_pay = models.BooleanField(default=False)
     is_sent = models.BooleanField(default=False)

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User edit</title>
+</head>
+<body>
+
+
+<form action="{% url 'library:user_edit' id=id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" name="username" class="form-control" id="username">
+    </div>
+    <div class="form-group">
+        <label for="password">Password&nbsp</label>
+        <input type="text" name="password" class="form-control" id="password">
+    </div>
+    <div class="form-group">
+        <label for="name">Name&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+        <input type="text" name="name" class="form-control" id="name">
+    </div>
+    <div class="form-group">
+        <label for="gender">Gender&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+        <input type="text" name="gender" class="form-control" id="gender">
+    </div>
+    <div class="form-group">
+        <label for="age">Age&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+        <input type="text" name="age" class="form-control" id="age">
+    </div>
+    <div class="form-group">
+        <label for="phone">Phone&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+        <input type="text" name="phone" class="form-control" id="phone">
+        <br/>
+        <button type="submit">Edit!</button>
+    </div>
+</form>
+<ul>
+        <li><strong>Username</strong>: {{ user.user_username }}&nbsp&nbsp&nbsp&nbsp<br/>
+            <strong>Name</strong>: {{ user.user_name }}<br/>
+            <strong>Gender</strong>: {{ user.user_gender }}<br/>
+            <strong>Age</strong>: {{ user.user_age }}<br/>
+            <strong>Phone</strong>: {{ user.user_phone }}<br/><br/>
+        </li>
+</ul>
+</body>
+</html>

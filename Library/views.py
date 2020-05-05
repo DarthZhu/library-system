@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib.auth.hashers import make_password, check_password
 
 from Library.models import User, Administrator, Book, AdminBill, UserBill
 
@@ -27,13 +28,14 @@ def register(request):
         age = request.POST.get("age")
         phone = request.POST.get("phone")
         user = User()
-        user.user_name = username
-        user.user_password = password
+        user.user_username = username
+        pwd = make_password(password, "a", 'pbkdf2_sha1')
+        user.user_password = pwd
         user.user_name = name
         user.user_gender = gender
         user.user_age = age
         user.user_phone = phone
-        # user.save()
+        user.save()
         # print(gender)
         return redirect(reverse("library:login"))
 
@@ -59,7 +61,8 @@ def login(request):
             user = User.objects.filter(user_username=username)
             user = list(user)
             user = user[0]
-            if password == user.user_password:
+            pwd = make_password(password, "a", 'pbkdf2_sha1')
+            if pwd == user.user_password:
                 return redirect(reverse('library:user_index', kwargs={'id': user.id}))
             else:
                 return HttpResponse('Invalid password or username')
@@ -139,7 +142,7 @@ def admin_add(request, id):
             book.author = author
             book.publisher = publisher
             book.price = price_sold
-            # book.save()
+            book.save()
         else:
             book = list(book)
             book = book[0]
@@ -150,8 +153,9 @@ def admin_add(request, id):
         bill.adminID = admin
         bill.price = price_bought
         bill.amount = amount
+        bill.pay = price_bought * amount
         bill.book = book
-        # bill.save()
+        bill.save()
         return HttpResponse('Purchase Success')
 
 
@@ -190,7 +194,7 @@ def admin_edit(request, id):
             if amount != "":
                 amount = int(amount)
                 book.amount = amount
-            # book.save()
+            book.save()
             # print(book.author)
             return HttpResponse('Edit Succeed')
 
@@ -226,7 +230,7 @@ def admin_pay(request, id):
             bill = list(bill)
             bill = bill[0]
             bill.is_pay = True
-            # bill.save()
+            bill.save()
             return HttpResponse('Bill is paid')
 
 
@@ -255,8 +259,8 @@ def admin_confirm(request, id):
             # print(book.amount)
             book.amount += bill.amount
             # print(book.amount)
-            # book.save()
-            # bill.save()
+            book.save()
+            bill.save()
             return HttpResponse('Order is received')
 
 
@@ -283,8 +287,33 @@ def admin_cancel(request, id):
             bill.is_pay = False
             bill.is_sent = False
             bill.is_cancelled = True
-            # bill.save()
+            bill.save()
             return HttpResponse('Order has been cancelled')
+
+
+def admin_check(request, id):
+    admin_bills = AdminBill.objects.filter(adminID=id)
+    user_bills = UserBill.objects.all()
+    if request.method == "GET":
+        data = {
+            'admin_bills': admin_bills,
+            'user_bills': user_bills,
+            'id': id,
+        }
+        return render(request, 'admin_check.html', context=data)
+    else:
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        admin_bills = AdminBill.objects.filter(time__gte=start_date).filter(time__lte=end_date)
+        user_bills = UserBill.objects.filter(time__gte=start_date).filter(time__lte=end_date)
+        data = {
+            'admin_bills': admin_bills,
+            'user_bills': user_bills,
+            'id': id,
+        }
+        return render(request, 'admin_check.html', context=data)
+
+
 
 
 def user_index(request, id):
@@ -331,7 +360,7 @@ def user_bill(request, id):
         "id": id,
         "bills": bills,
     }
-    return render(request, 'admin_bill.html', context=data)
+    return render(request, 'user_bill.html', context=data)
 
 
 def user_buy(request, id):
@@ -384,8 +413,8 @@ def user_buy(request, id):
                     book.amount -= amount
                     # print(bill.pay)
                     # print(book.amount)
-                    # bill.save()
-                    # book.save()
+                    bill.save()
+                    book.save()
                     return HttpResponse('Purchase Success')
 
 
@@ -410,7 +439,7 @@ def user_pay(request, id):
             bill = list(bill)
             bill = bill[0]
             bill.is_pay = True
-            # bill.save()
+            bill.save()
             return HttpResponse('Bill is paid')
 
 
@@ -424,7 +453,7 @@ def user_confirm(request, id):
             "id": id,
             "bills": bills,
         }
-        return render(request, 'admin_confirm.html', context=data)
+        return render(request, 'user_confirm.html', context=data)
     else:
         bill_id = request.POST.get('bill_id')
         bill_id = int(bill_id)
@@ -435,7 +464,7 @@ def user_confirm(request, id):
             bill = list(bill)
             bill = bill[0]
             bill.is_sent = True
-            # bill.save()
+            bill.save()
             return HttpResponse('Order is received')
 
 
@@ -464,7 +493,44 @@ def user_cancel(request, id):
             bill.is_cancelled = True
             book = bill.book
             book.amount += bill.amount
-            print (book.amount)
-            # book.save()
-            # bill.save()
+            print(book.amount)
+            book.save()
+            bill.save()
             return HttpResponse('Order has been cancelled')
+
+def user_edit(request, id):
+    user = User.objects.filter(id=id)
+    user = user.first()
+    if request.method == "GET":
+        data = {
+            "id": id,
+            "user": user,
+        }
+        return render(request, 'user_edit.html', context=data)
+    else:
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        pwd = make_password(password, "a", 'pbkdf2_sha1')
+        name = request.POST.get('name')
+        gender = request.POST.get('gender')
+        age = request.POST.get('age')
+        phone = request.POST.get('phone')
+        if username:
+            user.user_username = username
+        if password:
+            user.user_password = pwd
+        if name:
+            user.user_name = name
+        if gender:
+            if gender == 'M':
+                gender = True
+            else:
+                gender = False
+            user.user_gender = gender
+        if age:
+            user.user_age = age
+        if phone:
+            user.user_phone = phone
+        user.save()
+        return HttpResponse('User edited')
+

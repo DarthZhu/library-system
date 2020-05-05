@@ -11,26 +11,34 @@
         <input type="text" name="book_name" class="form-control" id="book_name">
     </div>
     <div class="form-group">
-        <label for="isbn">ISBN</label>
+        <label for="isbn">ISBN&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+        <label for="isbn"></label>
         <input type="text" name="isbn" class="form-control" id="isbn">
     </div>
     <div class="form-group">
-        <label for="author">Author</label>
+        <label for="author">Author&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
         <input type="text" name="author" class="form-control" id="author">
     </div>
     <div class="form-group">
-        <label for="publisher">Publisher</label>
+        <label for="publisher">Publisher&nbsp&nbsp&nbsp</label>
         <input type="text" name="publisher" class="form-control" id="publisher">
     </div>
     <div class="form-group">
-        <label for="amount">Amount</label>
+        <label for="amount">Amount&nbsp&nbsp&nbsp&nbsp&nbsp</label>
         <input type="text" name="amount" class="form-control" id="amount">
     </div>
     <button type="submit">Buy</button>
 </form>
 <ul>
     {% for book in books %}
-        <li>Book: {{ book.bookname }}</li>
+        <li><strong>ISBN</strong>: {{ book.ISBN }}&nbsp&nbsp&nbsp&nbsp
+            <strong>Bookname</strong>: {{ book.bookname }}<br/>
+            <strong>Author</strong>: {{ book.author }}<br/>
+            <strong>Publisher</strong>: {{ book.publisher }}<br/>
+            <strong>Price</strong>: {{ book.price }}<br/>
+            <strong>Amount</strong>: {{ book.amount }}<br/><br/>
+
+        </li>
     {% endfor %}
 </ul>
 </body>
