@@ -160,10 +160,12 @@ def admin_add(request, id):
 
 
 def admin_edit(request, id):
+    books = Book.objects.all()
     if request.method == "GET":
         data = {
             "title": "Edit",
             "id": id,
+            "books": books,
         }
         return render(request, 'admin_edit.html', context=data)
     else:
